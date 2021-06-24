@@ -24,7 +24,7 @@ const coursePost = (req, res) => {
           error: 'There was an error saving the course'
         });
       }
-      res.status(201);//CREATED
+      res.status(201);//CREATEDa
       res.header({
         'location': `http://localhost:3000/api/courses/?id=${course.id}`
       });
