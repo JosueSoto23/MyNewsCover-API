@@ -1,4 +1,4 @@
-# Week 1 - My First Hello World with API
+# Week 1 - My News Cover with API
 
 ## Install
 
