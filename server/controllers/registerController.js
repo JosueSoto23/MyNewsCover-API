@@ -6,9 +6,9 @@ const User = require("../models/registerModel");
  * @param {*} req
  * @param {*} res
  */
-const coursePost = (req, res) => {
+const userPost = (req, res) => {
   var user = new User();
-
+  
   user.name = req.body.name;
   user.lastName = req.body.lastName;
 
@@ -35,7 +35,7 @@ const coursePost = (req, res) => {
       }
       res.status(201);//CREATEDa
       res.header({
-        'location': `http://localhost:3000/api/courses/?id=${user.id}`
+        'location': `http://localhost:3000/api/users/?id=${user.id}`
       });
       res.json(user);
     });
@@ -54,20 +54,20 @@ const coursePost = (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-const courseGet = (req, res) => {
+const userGet = (req, res) => {
   // if an specific task is required
   if (req.query && req.query.id) {
-    Course.findById(req.query.id, function (err, user) {
+    User.findById(req.query.id, function (err, user) {
       if (err) {
         res.status(404);
         console.log('error while queryting the user', err)
-        res.json({ error: "Course doesnt exist" })
+        res.json({ error: "User doesnt exist" })
       }
       res.json(user);
     });
   } else {
     // get all tasks
-    Course.find(function (err, user) {
+    User.find(function (err, user) {
       if (err) {
         res.status(422);
         res.json({ "error": err });
@@ -84,14 +84,14 @@ const courseGet = (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-const courseDelete = (req, res) => {
+const userDelete = (req, res) => {
   // if an specific task is required
   if (req.query && req.query.id) {
-    Course.findById(req.query.id, function (err, user) {
+    User.findById(req.query.id, function (err, user) {
       if (err) {
         res.status(500);
         console.log('error while queryting the user', err)
-        res.json({ error: "Course doesnt exist" })
+        res.json({ error: "User doesnt exist" })
       }
       //if the task exists
       if(user) {
@@ -104,11 +104,11 @@ const courseDelete = (req, res) => {
       } else {
         res.status(404);
         console.log('error while queryting the user', err)
-        res.json({ error: "Course doesnt exist" })
+        res.json({ error: "User doesnt exist" })
       }
     });
   } else {
-    res.status(404).json({ error: "You must provide a Course ID" });
+    res.status(404).json({ error: "You must provide a User ID" });
   }
 };
 
@@ -118,14 +118,14 @@ const courseDelete = (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-const coursePatch = (req, res) => {
+const userPatch = (req, res) => {
   // get task by id
   if (req.query && req.query.id) {
-    Course.findById(req.query.id, function (err, user) {
+    User.findById(req.query.id, function (err, user) {
       if (err) {
         res.status(404);
         console.log('error while queryting the user', err)
-        res.json({ error: "Course doesnt exist" })
+        res.json({ error: "User doesnt exist" })
       }
 
       // update the task object (patch)
@@ -152,13 +152,13 @@ const coursePatch = (req, res) => {
     });
   } else {
     res.status(404);
-    res.json({ error: "Course doesnt exist" })
+    res.json({ error: "User doesnt exist" })
   }
 };
 
 module.exports = {
-  courseGet,
-  coursePost,
-  coursePatch,
-  courseDelete
+  userGet,
+  userPost,
+  userPatch,
+  userDelete
 }
