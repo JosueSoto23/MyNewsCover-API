@@ -8,8 +8,8 @@ const User = require("../models/registerModel");
  */
 const userPost = (req, res) => {
   var user = new User();
-  
-  user.name = req.body.name;
+
+  user.firstName = req.body.firstName;
   user.lastName = req.body.lastName;
 
   user.email = req.body.email;
@@ -19,12 +19,12 @@ const userPost = (req, res) => {
   user.address2 = req.body.address2;
 
   user.country = req.body.country;
-  user.city = req.body.city;
+  user.city = req.body.city; 
 
   user.postalCode = req.body.postalCode;
   user.phoneNumber = req.body.phoneNumber;
 
-  if (user.name && user.lastName && user.email && user.password && user.address1 && user.address2 && user.country && user.city && user.postalCode && user.phoneNumber) {
+  if (user.firstName && user.lastName && user.email && user.password) {
     user.save(function (err) {
       if (err) {
         res.status(422);
@@ -129,11 +129,20 @@ const userPatch = (req, res) => {
       }
 
       // update the task object (patch)
-      user.name = req.body.name ? req.body.name : task.name;
-      user.code = req.body.code ? req.body.code : task.code;
-
-      user.career = req.body.career ? req.body.career : task.career;
-      user.credits = req.body.credits ? req.body.credits : task.credits;
+      user.firstName = req.body.name ? req.body.firstName : task.firstName;
+      user.lastName = req.body.lastName ? req.body.lastName : task.lastName;
+    
+      user.email = req.body.email ? req.body.email : task.email;
+      user.password = req.body.password ? req.body.password : task.password;
+    
+      user.address1 = req.body.address1 ? req.body.address1 : task.address1;
+      user.address2 = req.body.address2 ? req.body.address2 : task.address2;
+    
+      user.country = req.body.country ? req.body.country : task.country;
+      user.city = req.body.city ? req.body.city : task.city;
+    
+      user.postalCode = req.body.postalCode ? req.body.postalCode : task.postalCode;
+      user.phoneNumber = req.body.phoneNumber ? req.body.phoneNumber : task.phoneNumber;
       // update the task object (put)
       // task.title = req.body.title
       // task.detail = req.body.detail
