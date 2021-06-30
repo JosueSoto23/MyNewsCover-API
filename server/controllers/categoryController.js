@@ -1,4 +1,4 @@
-const User = require("../models/categoryModel");
+const Category = require("../models/categoryModel");
 
 /**
  * Crea los usuarios
@@ -6,44 +6,31 @@ const User = require("../models/categoryModel");
  * @param {*} req
  * @param {*} res
  */
-const userPost = (req, res) => {
-  var user = new User();
+const categoryPost = (req, res) => {
+  var category = new Category();
 
-  user.firstName = req.body.firstName;
-  user.lastName = req.body.lastName;
-
-  user.email = req.body.email;
-  user.password = req.body.password;
-
-  user.address1 = req.body.address1;
-  user.address2 = req.body.address2;
-
-  user.country = req.body.country;
-  user.city = req.body.city; 
-
-  user.postalCode = req.body.postalCode;
-  user.phoneNumber = req.body.phoneNumber;
-
-  if (user.firstName && user.lastName && user.email && user.password) {
-    user.save(function (err) {
+  category.nameCategory = req.body.nameCategory;
+  
+  if (category.nameCategory) {
+    category.save(function (err) {
       if (err) {
         res.status(422);
-        console.log('error while saving the user', err)
+        console.log('error while saving the category', err)
         res.json({
-          error: 'There was an error saving the user'
+          error: 'There was an error saving the category'
         });
       }
       res.status(201);//CREATEDa
       res.header({
-        'location': `http://localhost:3000/api/users/?id=${user.id}`
+        'location': `http://localhost:3000/api/categories/?id=${category.id}`
       });
-      res.json(user);
+      res.json(category);
     });
   } else {
     res.status(422);
-    console.log('error while saving the user')
+    console.log('error while saving the category')
     res.json({
-      error: 'No valid data provided for user'
+      error: 'No valid data provided for category'
     });
   }
 };
@@ -54,25 +41,25 @@ const userPost = (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-const userGet = (req, res) => {
+const categoryGet = (req, res) => {
   // if an specific task is required
   if (req.query && req.query.id) {
-    User.findById(req.query.id, function (err, user) {
+    Category.findById(req.query.id, function (err, category) {
       if (err) {
         res.status(404);
-        console.log('error while queryting the user', err)
-        res.json({ error: "User doesnt exist" })
+        console.log('error while queryting the category', err)
+        res.json({ error: "category doesnt exist" })
       }
-      res.json(user);
+      res.json(category);
     });
   } else {
     // get all tasks
-    User.find(function (err, user) {
+    Category.find(function (err, category) {
       if (err) {
         res.status(422);
         res.json({ "error": err });
       }
-      res.json(user);
+      res.json(category);
     });
 
   }
@@ -84,31 +71,31 @@ const userGet = (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-const userDelete = (req, res) => {
+const categoryDelete = (req, res) => {
   // if an specific task is required
   if (req.query && req.query.id) {
-    User.findById(req.query.id, function (err, user) {
+    Category.findById(req.query.id, function (err, category) {
       if (err) {
         res.status(500);
-        console.log('error while queryting the user', err)
-        res.json({ error: "User doesnt exist" })
+        console.log('error while queryting the category', err)
+        res.json({ error: "category doesnt exist" })
       }
       //if the task exists
-      if(user) {
-        user.remove(function(err){
+      if(category) {
+        category.remove(function(err){
           if(err) {
-            res.status(500).json({message: "There was an error deleting the user"});
+            res.status(500).json({message: "There was an error deleting the category"});
           }
           res.status(204).json({});
         })
       } else {
         res.status(404);
-        console.log('error while queryting the user', err)
-        res.json({ error: "User doesnt exist" })
+        console.log('error while queryting the category', err)
+        res.json({ error: "category doesnt exist" })
       }
     });
   } else {
-    res.status(404).json({ error: "You must provide a User ID" });
+    res.status(404).json({ error: "You must provide a category ID" });
   }
 };
 
@@ -118,56 +105,44 @@ const userDelete = (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-const userPatch = (req, res) => {
+const categoryPatch = (req, res) => {
   // get task by id
   if (req.query && req.query.id) {
-    User.findById(req.query.id, function (err, user) {
+    Category.findById(req.query.id, function (err, category) {
       if (err) {
         res.status(404);
-        console.log('error while queryting the user', err)
-        res.json({ error: "User doesnt exist" })
+        console.log('error while queryting the category', err)
+        res.json({ error: "category doesnt exist" })
       }
 
       // update the task object (patch)
-      user.firstName = req.body.name ? req.body.firstName : task.firstName;
-      user.lastName = req.body.lastName ? req.body.lastName : task.lastName;
-    
-      user.email = req.body.email ? req.body.email : task.email;
-      user.password = req.body.password ? req.body.password : task.password;
-    
-      user.address1 = req.body.address1 ? req.body.address1 : task.address1;
-      user.address2 = req.body.address2 ? req.body.address2 : task.address2;
-    
-      user.country = req.body.country ? req.body.country : task.country;
-      user.city = req.body.city ? req.body.city : task.city;
-    
-      user.postalCode = req.body.postalCode ? req.body.postalCode : task.postalCode;
-      user.phoneNumber = req.body.phoneNumber ? req.body.phoneNumber : task.phoneNumber;
+      category.nameCategory = req.body.nameCategory ? req.body.nameCategory : task.nameCategory;
+      
       // update the task object (put)
       // task.title = req.body.title
       // task.detail = req.body.detail
 
-      user.save(function (err) {
+      category.save(function (err) {
         if (err) {
           res.status(422);
-          console.log('error while saving the user', err)
+          console.log('error while saving the category', err)
           res.json({
-            error: 'There was an error saving the user'
+            error: 'There was an error saving the category'
           });
         }
         res.status(200); // OK
-        res.json(user);
+        res.json(category);
       });
     });
   } else {
     res.status(404);
-    res.json({ error: "User doesnt exist" })
+    res.json({ error: "category doesnt exist" })
   }
 };
 
 module.exports = {
-  userGet,
-  userPost,
-  userPatch,
-  userDelete
+  categoryGet,
+  categoryPost,
+  categoryPatch,
+  categoryDelete
 }

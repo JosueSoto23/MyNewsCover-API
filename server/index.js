@@ -14,14 +14,14 @@ const {
   userDelete
 } = require("./controllers/registerController");
 
-/*const {
+const {
   categoryPatch,
   categoryPost,
   categoryGet,
   categoryDelete
 } = require("./controllers/categoryController");
 
-const {
+/*const {
   newsPatch,
   newsPost,
   newsGet,
@@ -56,13 +56,13 @@ app.patch("/api/users", userPatch);
 app.put("/api/users", userPatch);
 app.delete("/api/users", userDelete);
 
-/*app.get("/api/categories", categoryGet);
+app.get("/api/categories", categoryGet);
 app.post("/api/categories", categoryPost);
 app.patch("/api/categories", categoryPatch);
 app.put("/api/categories", categoryPatch);
 app.delete("/api/categories", categoryDelete);
 
-app.get("/api/news", newsGet);
+/*app.get("/api/news", newsGet);
 app.post("/api/news", newsPost);
 app.patch("/api/news", newsPatch);
 app.put("/api/news", newsPatch);
