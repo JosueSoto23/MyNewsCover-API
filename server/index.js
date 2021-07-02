@@ -27,14 +27,14 @@ const {
   newsGet,
   newsDelete
 } = require("./controllers/newsController");
-
+*/
 const {
   newsSourcePatch,
   newsSourcePost,
   newsSourceGet,
   newsSourceDelete
-} = require("./controllers/newsSourceController");
-*/
+} = require("./controllers/newssourcesController");
+
 
 // check for cors
 const cors = require("cors");
@@ -67,12 +67,11 @@ app.post("/api/news", newsPost);
 app.patch("/api/news", newsPatch);
 app.put("/api/news", newsPatch);
 app.delete("/api/news", newsDelete);
-
+*/
 app.get("/api/newsSources", newsSourceGet);
 app.post("/api/newsSources", newsSourcePost);
 app.patch("/api/newsSources", newsSourcePatch);
 app.put("/api/newsSources", newsSourcePatch);
 app.delete("/api/newsSources", newsSourceDelete);
-*/
 
 app.listen(3000, () => console.log(`Project app listening on port 3000!`))
