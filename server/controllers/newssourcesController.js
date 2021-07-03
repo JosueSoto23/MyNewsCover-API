@@ -1,4 +1,4 @@
-const Sources = require("../models/newssourcesModel");
+const NewsSources = require("../models/newssourcesModel");
 
 /**
  * Crea los usuarios
@@ -7,15 +7,15 @@ const Sources = require("../models/newssourcesModel");
  * @param {*} res
  */
 const newsSourcePost = (req, res) => {
-  var sources = new Sources();
+  var sources = new NewsSources();
 
   sources.url = req.body.url;
-  sources.nameSources = req.body.nameSources;
+  sources.nameSource = req.body.nameSource;
 
   sources.categoryID = req.body.categoryID;
   sources.userID = req.body.userID;
 
-  if (sources.url && sources.nameSources && sources.categoryID) {
+  if (sources.url && sources.nameSource && sources.categoryID) {
     sources.save(function (err) {
       if (err) {
         res.status(422);
@@ -48,7 +48,7 @@ const newsSourcePost = (req, res) => {
 const newsSourceGet = (req, res) => {
   // if an specific task is required
   if (req.query && req.query.id) {
-    Sources.findById(req.query.id, function (err, sources) {
+    NewsSourcesSources.findById(req.query.id, function (err, sources) {
       if (err) {
         res.status(404);
         console.log('error while queryting the sources', err)
@@ -58,7 +58,7 @@ const newsSourceGet = (req, res) => {
     });
   } else {
     // get all tasks
-    Sources.find(function (err, sources) {
+    NewsSources.find(function (err, sources) {
       if (err) {
         res.status(422);
         res.json({ "error": err });
