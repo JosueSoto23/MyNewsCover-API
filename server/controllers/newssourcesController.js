@@ -15,7 +15,7 @@ const newsSourcePost = (req, res) => {
   sources.categoryID = req.body.categoryID;
   sources.userID = req.body.userID;
 
-  if (sources.url && sources.nameSource && sources.categoryID) {
+  if (sources.url && sources.nameSource) {
     sources.save(function (err) {
       if (err) {
         res.status(422);

@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const newsSource = new Schema ({
     url: {type: String},
     nameSource: {type: String},
-    categoryID: {type: Number},
-    userID: {type: Number}
+    categoryID: {type: String},
+    userID: {type: String}
 });
 
 module.exports = mongoose.model("newsSources", newsSource);
