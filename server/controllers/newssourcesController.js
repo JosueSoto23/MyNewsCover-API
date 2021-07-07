@@ -48,7 +48,7 @@ const newsSourcePost = (req, res) => {
 const newsSourceGet = (req, res) => {
   // if an specific task is required
   if (req.query && req.query.id) {
-    NewsSourcesSources.findById(req.query.id, function (err, sources) {
+    NewsSources.findById(req.query.id, function (err, sources) {
       if (err) {
         res.status(404);
         console.log('error while queryting the sources', err)
@@ -78,7 +78,7 @@ const newsSourceGet = (req, res) => {
 const newsSourceDelete = (req, res) => {
   // if an specific task is required
   if (req.query && req.query.id) {
-    Sources.findById(req.query.id, function (err, sources) {
+    NewsSources.findById(req.query.id, function (err, sources) {
       if (err) {
         res.status(500);
         console.log('error while queryting the sources', err)
@@ -112,7 +112,7 @@ const newsSourceDelete = (req, res) => {
 const newsSourcePatch = (req, res) => {
   // get task by id
   if (req.query && req.query.id) {
-    Sources.findById(req.query.id, function (err, sources) {
+    NewsSources.findById(req.query.id, function (err, sources) {
       if (err) {
         res.status(404);
         console.log('error while queryting the sources', err)
@@ -120,7 +120,7 @@ const newsSourcePatch = (req, res) => {
       }
       // update the task object (patch)
       sources.url = req.body.url ? req.body.url : task.url;
-      sources.nameSources = req.body.nameSources ? req.body.nameSources : task.nameSources;
+      sources.nameSource = req.body.nameSource ? req.body.nameSource : task.nameSource;
     
       sources.categoryID = req.body.categoryID ? req.body.categoryID : task.categoryID;
       sources.userID = req.body.userID ? req.body.userID : task.userID;
