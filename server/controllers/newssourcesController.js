@@ -118,12 +118,13 @@ const newsSourcePatch = (req, res) => {
         console.log('error while queryting the sources', err)
         res.json({ error: "sources doesnt exist" })
       }
+      
       // update the task object (patch)
-      sources.url = req.body.url ? req.body.url : task.url;
-      sources.nameSource = req.body.nameSource ? req.body.nameSource : task.nameSource;
+      sources.url = req.body.url ? req.body.url : sources.url;
+      sources.nameSource = req.body.nameSource ? req.body.nameSource : sources.nameSource;
     
-      sources.categoryID = req.body.categoryID ? req.body.categoryID : task.categoryID;
-      sources.userID = req.body.userID ? req.body.userID : task.userID;
+      sources.categoryID = req.body.categoryID ? req.body.categoryID : sources.categoryID;
+      sources.userID = req.body.userID ? req.body.userID : sources.userID;
     
       // update the task object (put)
       // task.title = req.body.title

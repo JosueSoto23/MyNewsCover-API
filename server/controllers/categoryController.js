@@ -114,7 +114,7 @@ const categoryPatch = (req, res) => {
         console.log('error while queryting the category', err)
         res.json({ error: "category doesnt exist" })
       }
-
+      
       // update the task object (patch)
       category.nameCategory = req.body.nameCategory ? req.body.nameCategory : task.nameCategory;
       
