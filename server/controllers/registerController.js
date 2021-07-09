@@ -15,7 +15,7 @@ const userPost = (req, res) => {
   user.email = req.body.email;
   user.password = req.body.password;
 
-  user.address1 = req.body.address1;
+  user.address = req.body.address;
   user.address2 = req.body.address2;
 
   user.country = req.body.country;
