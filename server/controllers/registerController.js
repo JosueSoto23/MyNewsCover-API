@@ -23,8 +23,9 @@ const userPost = (req, res) => {
 
   user.postalCode = req.body.postalCode;
   user.phoneNumber = req.body.phoneNumber;
+  user.role = req.body.role;
 
-  if (user.firstName && user.lastName && user.email && user.password) {
+  if (user.firstName && user.lastName && user.email && user.password && user.role) {
     user.save(function (err) {
       if (err) {
         res.status(422);

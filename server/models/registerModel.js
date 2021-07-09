@@ -11,7 +11,8 @@ const user = new Schema({
   country: { type: String },
   city: { type: String },
   postalCode: { type: String },
-  phoneNumber: { type: String }
+  phoneNumber: { type: String },
+  role: { type: String }
 });
 
 module.exports = mongoose.model('user', user);
