@@ -136,9 +136,6 @@ const userPatch = (req, res) => {
       user.email = req.body.email ? req.body.email : task.email;
       user.password = req.body.password ? req.body.password : task.password;
     
-      user.address1 = req.body.address1 ? req.body.address1 : task.address1;
-      user.address2 = req.body.address2 ? req.body.address2 : task.address2;
-    
       user.country = req.body.country ? req.body.country : task.country;
       user.city = req.body.city ? req.body.city : task.city;
     
