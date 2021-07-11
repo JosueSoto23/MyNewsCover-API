@@ -43,13 +43,6 @@ app.use(cors({
   methods: "*"
 }));
 
-// listen to the task request
-/*app.get("/api/tasks", taskGet);
-app.post("/api/tasks", taskPost);
-app.patch("/api/tasks", taskPatch);
-app.put("/api/tasks", taskPatch);
-app.delete("/api/tasks", taskDelete);*/
-/**http://localhost:3000/api/users */
 app.get("/api/users", userGet);
 app.post("/api/users", userPost);
 app.patch("/api/users", userPatch);
