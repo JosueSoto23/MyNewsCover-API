@@ -1,7 +1,7 @@
 const User = require("../models/newsModel");
 
 /**
- * Crea los usuarios
+ * Crea las noticias
  *
  * @param {*} req
  * @param {*} res

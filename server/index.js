@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-// database connection
+
 const mongoose = require("mongoose");
 const db = mongoose.connect("mongodb://127.0.0.1:27017/tasks-api");
 
@@ -21,13 +21,13 @@ const {
   categoryDelete
 } = require("./controllers/categoryController");
 
-/*const {
+const {
   newsPatch,
   newsPost,
   newsGet,
   newsDelete
 } = require("./controllers/newsController");
-*/
+
 const {
   newsSourcePatch,
   newsSourcePost,
@@ -35,8 +35,6 @@ const {
   newsSourceDelete
 } = require("./controllers/newssourcesController");
 
-
-// check for cors
 const cors = require("cors");
 app.use(cors({
   domains: '*',
@@ -55,12 +53,12 @@ app.patch("/api/categories", categoryPatch);
 app.put("/api/categories", categoryPatch);
 app.delete("/api/categories", categoryDelete);
 
-/*app.get("/api/news", newsGet);
+app.get("/api/news", newsGet);
 app.post("/api/news", newsPost);
 app.patch("/api/news", newsPatch);
 app.put("/api/news", newsPatch);
 app.delete("/api/news", newsDelete);
-*/
+
 app.get("/api/newsSources", newsSourceGet);
 app.post("/api/newsSources", newsSourcePost);
 app.patch("/api/newsSources", newsSourcePatch);
