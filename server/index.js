@@ -22,7 +22,6 @@ const {
 } = require("./controllers/categoryController");
 
 const {
-  newsPatch,
   newsPost,
   newsGet,
   newsDelete
@@ -55,8 +54,6 @@ app.delete("/api/categories", categoryDelete);
 
 app.get("/api/news", newsGet);
 app.post("/api/news", newsPost);
-app.patch("/api/news", newsPatch);
-app.put("/api/news", newsPatch);
 app.delete("/api/news", newsDelete);
 
 app.get("/api/newsSources", newsSourceGet);
