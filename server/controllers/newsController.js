@@ -31,7 +31,7 @@ const newsPost = (req, res) => {
       }
       res.status(201);//CREATED
       res.header({
-        'location': `http://localhost:3000/api/newss/?id=${news.id}`
+        'location': `http://localhost:3000/api/news/?id=${news.id}`
       });
       res.json(news);
     });
