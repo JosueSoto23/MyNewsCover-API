@@ -1,10 +1,13 @@
+/**
+ * Model connector
+ */
 const User = require("../models/registerModel");
 
 /**
- * Crea los usuarios
+ * Creates an user
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code 
  */
 const userPost = (req, res) => {
   var user = new User();
@@ -19,7 +22,7 @@ const userPost = (req, res) => {
   user.address2 = req.body.address2;
 
   user.country = req.body.country;
-  user.city = req.body.city; 
+  user.city = req.body.city;
 
   user.postalCode = req.body.postalCode;
   user.phoneNumber = req.body.phoneNumber;
@@ -34,7 +37,7 @@ const userPost = (req, res) => {
           error: 'There was an error saving the user'
         });
       }
-      res.status(201);//CREATEDa
+      res.status(201); //CREATED
       res.header({
         'location': `http://localhost:3000/api/users/?id=${user.id}`
       });
@@ -50,13 +53,13 @@ const userPost = (req, res) => {
 };
 
 /**
- * Get all tasks
+ * Gets all users
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code 
  */
 const userGet = (req, res) => {
-  // if an specific task is required
+  // If a specific user is required
   if (req.query && req.query.id) {
     User.findById(req.query.id, function (err, user) {
       if (err) {
@@ -67,7 +70,7 @@ const userGet = (req, res) => {
       res.json(user);
     });
   } else {
-    // get all tasks
+    //Gets all users
     User.find(function (err, user) {
       if (err) {
         res.status(422);
@@ -80,13 +83,13 @@ const userGet = (req, res) => {
 };
 
 /**
- * Delete one task
+ * Deletes one user
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code 
  */
 const userDelete = (req, res) => {
-  // if an specific task is required
+  // If a specific user is required
   if (req.query && req.query.id) {
     User.findById(req.query.id, function (err, user) {
       if (err) {
@@ -94,11 +97,11 @@ const userDelete = (req, res) => {
         console.log('error while queryting the user', err)
         res.json({ error: "User doesnt exist" })
       }
-      //if the task exists
-      if(user) {
-        user.remove(function(err){
-          if(err) {
-            res.status(500).json({message: "There was an error deleting the user"});
+      // If the user exists
+      if (user) {
+        user.remove(function (err) {
+          if (err) {
+            res.status(500).json({ message: "There was an error deleting the user" });
           }
           res.status(204).json({});
         })
@@ -114,13 +117,13 @@ const userDelete = (req, res) => {
 };
 
 /**
- * Updates a task
+ * Updates a user
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code 
  */
 const userPatch = (req, res) => {
-  // get task by id
+  // Gets a task by id
   if (req.query && req.query.id) {
     User.findById(req.query.id, function (err, user) {
       if (err) {
@@ -129,19 +132,19 @@ const userPatch = (req, res) => {
         res.json({ error: "User doesnt exist" })
       }
 
-      // update the task object (patch)
+      // Updates the task object (patch)
       user.firstName = req.body.name ? req.body.firstName : task.firstName;
       user.lastName = req.body.lastName ? req.body.lastName : task.lastName;
-    
+
       user.email = req.body.email ? req.body.email : task.email;
       user.password = req.body.password ? req.body.password : task.password;
-    
+
       user.country = req.body.country ? req.body.country : task.country;
       user.city = req.body.city ? req.body.city : task.city;
-    
+
       user.postalCode = req.body.postalCode ? req.body.postalCode : task.postalCode;
       user.phoneNumber = req.body.phoneNumber ? req.body.phoneNumber : task.phoneNumber;
-      // update the task object (put)
+      // Updates the task object (put)
       // task.title = req.body.title
       // task.detail = req.body.detail
 
@@ -163,6 +166,9 @@ const userPatch = (req, res) => {
   }
 };
 
+/**
+ * Exports
+ */
 module.exports = {
   userGet,
   userPost,
