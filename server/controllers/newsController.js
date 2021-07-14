@@ -1,10 +1,13 @@
+/**
+ * Model connector
+ */
 const News = require("../models/newsModel");
 
 /**
- * Creates news
+ * Creates a new
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code
  */
 const newsPost = (req, res) => {
   var news = new News();
@@ -29,7 +32,7 @@ const newsPost = (req, res) => {
           error: 'There was an error saving the news'
         });
       }
-      res.status(201);//CREATED
+      res.status(201);// CREATED
       res.header({
         'location': `http://localhost:3000/api/news/?id=${news.id}`
       });
@@ -45,10 +48,10 @@ const newsPost = (req, res) => {
 };
 
 /**
- * Get all news
+ * Gets all news
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code
  */
 const newsGet = (req, res) => {
   
@@ -62,7 +65,7 @@ const newsGet = (req, res) => {
       res.json(news);
     });
   } else {
-    // get all tasks
+    // Gets all news
     News.find(function (err, news) {
       if (err) {
         res.status(422);
@@ -75,10 +78,10 @@ const newsGet = (req, res) => {
 };
 
 /**
- * Deletes on new
+ * Deletes a new
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code
  */
 const newsDelete = (req, res) => {
   
@@ -108,6 +111,9 @@ const newsDelete = (req, res) => {
   }
 };
 
+/**
+ * Exports
+ */
 module.exports = {
   newsGet,
   newsPost,
