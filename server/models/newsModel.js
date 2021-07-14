@@ -1,6 +1,16 @@
+/**
+ * Database connection
+ */
 const mongoose = require("mongoose");
+
+/**
+ * Schema creation
+ */
 const Schema = mongoose.Schema;
 
+/**
+ * Schema´s data
+ */
 const news = new Schema ({
     title: {type: String},
     short_description: {type: String},
@@ -11,4 +21,7 @@ const news = new Schema ({
     category_id: {type: String}
 });
 
+/**
+ * Model
+ */
 module.exports = mongoose.model("news", news);
