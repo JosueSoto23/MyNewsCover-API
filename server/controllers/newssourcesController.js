@@ -1,10 +1,13 @@
+/**
+ * Model connector
+ */
 const NewsSources = require("../models/newssourcesModel");
 
 /**
- * Crea los usuarios
+ * Creates a News Source
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code 
  */
 const newsSourcePost = (req, res) => {
   var sources = new NewsSources();
@@ -24,7 +27,7 @@ const newsSourcePost = (req, res) => {
           error: 'There was an error saving the sources'
         });
       }
-      res.status(201);//CREATEDa
+      res.status(201);//CREATED
       res.header({
         'location': `http://localhost:3000/api/newsSources/?id=${sources.id}`
       });
@@ -40,13 +43,13 @@ const newsSourcePost = (req, res) => {
 };
 
 /**
- * Get all tasks
+ * Gets all News Source
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code 
  */
 const newsSourceGet = (req, res) => {
-  // if an specific task is required
+  // If a specific news sources is required
   if (req.query && req.query.id) {
     NewsSources.findById(req.query.id, function (err, sources) {
       if (err) {
@@ -57,7 +60,7 @@ const newsSourceGet = (req, res) => {
       res.json(sources);
     });
   } else {
-    // get all tasks
+    // Gets all news sources
     NewsSources.find(function (err, sources) {
       if (err) {
         res.status(422);
@@ -70,13 +73,13 @@ const newsSourceGet = (req, res) => {
 };
 
 /**
- * Delete one task
+ * Deletes a News Source
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code 
  */
 const newsSourceDelete = (req, res) => {
-  // if an specific task is required
+  // If an specific task is required
   if (req.query && req.query.id) {
     NewsSources.findById(req.query.id, function (err, sources) {
       if (err) {
@@ -84,7 +87,7 @@ const newsSourceDelete = (req, res) => {
         console.log('error while queryting the sources', err)
         res.json({ error: "sources doesnt exist" })
       }
-      //if the task exists
+      // If the news source exists
       if(sources) {
         sources.remove(function(err){
           if(err) {
@@ -104,10 +107,10 @@ const newsSourceDelete = (req, res) => {
 };
 
 /**
- * Updates a task
+ * Updates a News Source
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code 
  */
 const newsSourcePatch = (req, res) => {
   // get task by id
@@ -119,14 +122,14 @@ const newsSourcePatch = (req, res) => {
         res.json({ error: "sources doesnt exist" })
       }
       
-      // update the task object (patch)
+      // Updates the news source (patch)
       sources.url = req.body.url ? req.body.url : sources.url;
       sources.nameSource = req.body.nameSource ? req.body.nameSource : sources.nameSource;
     
       sources.categoryID = req.body.categoryID ? req.body.categoryID : sources.categoryID;
       sources.userID = req.body.userID ? req.body.userID : sources.userID;
     
-      // update the task object (put)
+      // Updates the news source object (put)
       // task.title = req.body.title
       // task.detail = req.body.detail
 
@@ -148,6 +151,9 @@ const newsSourcePatch = (req, res) => {
   }
 };
 
+/**
+ * Exports
+ */
 module.exports = {
   newsSourceGet,
   newsSourcePost,
