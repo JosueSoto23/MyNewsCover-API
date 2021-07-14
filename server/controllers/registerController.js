@@ -7,7 +7,7 @@ const User = require("../models/registerModel");
  * Creates an user
  *
  * @param {*} req Data required
- * @param {*} res Http status code 
+ * @param {*} res Http status code
  */
 const userPost = (req, res) => {
   var user = new User();

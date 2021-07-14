@@ -1,16 +1,19 @@
+/**
+ * Model connector
+ */
 const Category = require("../models/categoryModel");
 
 /**
- * Crea los usuarios
+ * Creates a category
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code
  */
 const categoryPost = (req, res) => {
   var category = new Category();
 
   category.nameCategory = req.body.nameCategory;
-  
+
   if (category.nameCategory) {
     category.save(function (err) {
       if (err) {
@@ -20,7 +23,7 @@ const categoryPost = (req, res) => {
           error: 'There was an error saving the category'
         });
       }
-      res.status(201);//CREATEDa
+      res.status(201);//CREATED
       res.header({
         'location': `http://localhost:3000/api/categories/?id=${category.id}`
       });
@@ -36,13 +39,13 @@ const categoryPost = (req, res) => {
 };
 
 /**
- * Get all tasks
+ * Gets all categories
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code
  */
 const categoryGet = (req, res) => {
-  // if an specific task is required
+  // If a specific category is required
   if (req.query && req.query.id) {
     Category.findById(req.query.id, function (err, category) {
       if (err) {
@@ -53,7 +56,7 @@ const categoryGet = (req, res) => {
       res.json(category);
     });
   } else {
-    // get all tasks
+    // Gets all categories
     Category.find(function (err, category) {
       if (err) {
         res.status(422);
@@ -66,13 +69,13 @@ const categoryGet = (req, res) => {
 };
 
 /**
- * Delete one task
+ * Deletes one category
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code
  */
 const categoryDelete = (req, res) => {
-  // if an specific task is required
+  // If a specific category is required
   if (req.query && req.query.id) {
     Category.findById(req.query.id, function (err, category) {
       if (err) {
@@ -80,11 +83,11 @@ const categoryDelete = (req, res) => {
         console.log('error while queryting the category', err)
         res.json({ error: "category doesnt exist" })
       }
-      //if the task exists
-      if(category) {
-        category.remove(function(err){
-          if(err) {
-            res.status(500).json({message: "There was an error deleting the category"});
+      // If the category exists
+      if (category) {
+        category.remove(function (err) {
+          if (err) {
+            res.status(500).json({ message: "There was an error deleting the category" });
           }
           res.status(204).json({});
         })
@@ -100,13 +103,13 @@ const categoryDelete = (req, res) => {
 };
 
 /**
- * Updates a task
+ * Updates a category
  *
- * @param {*} req
- * @param {*} res
+ * @param {*} req Data required
+ * @param {*} res Http status code
  */
 const categoryPatch = (req, res) => {
-  // get task by id
+  // Gets a category by id
   if (req.query && req.query.id) {
     Category.findById(req.query.id, function (err, category) {
       if (err) {
@@ -114,11 +117,11 @@ const categoryPatch = (req, res) => {
         console.log('error while queryting the category', err)
         res.json({ error: "category doesnt exist" })
       }
-      
-      // update the task object (patch)
+
+      // Updates the category object (patch)
       category.nameCategory = req.body.nameCategory ? req.body.nameCategory : task.nameCategory;
-      
-      // update the task object (put)
+
+      // Update the category object (put)
       // task.title = req.body.title
       // task.detail = req.body.detail
 
@@ -140,6 +143,9 @@ const categoryPatch = (req, res) => {
   }
 };
 
+/**
+ * Exports
+ */
 module.exports = {
   categoryGet,
   categoryPost,
