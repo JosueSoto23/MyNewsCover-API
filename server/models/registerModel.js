@@ -1,6 +1,16 @@
+/**
+ * Database connection
+ */
 const mongoose = require('mongoose');
+
+/**
+ * Schema creation
+ */
 const Schema = mongoose.Schema;
 
+/**
+ * Schema´s data
+ */
 const user = new Schema({
   firstName: { type: String },
   lastName: { type: String },
@@ -13,4 +23,7 @@ const user = new Schema({
   role: { type: String }
 });
 
+/**
+ * Model
+ */
 module.exports = mongoose.model('user', user);
