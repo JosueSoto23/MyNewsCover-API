@@ -38,6 +38,7 @@ const userPost = (req, res) => {
         });
       }
       res.status(201); //CREATED
+      sendMail(user);
       res.header({
         'location': `http://localhost:3000/api/users/?id=${user.id}`
       });
@@ -51,6 +52,38 @@ const userPost = (req, res) => {
     });
   }
 };
+
+const sendMail = async(user) => {
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: "geberthalfaro85@gmail.com", // generated ethereal user
+      pass: "fpfbgqtqdxbtggod", // generated ethereal password
+    },
+  })
+  var mailOptions = {
+    from: '"Remitente', // sender address
+    to: user.email, // list of receivers
+    subject: "[My News Cover] Please confirm your email address", // Subject line
+    text:  `Hey ${user.firstName} ${user.lastName}!
+    
+    Thanks for joining My News Cover. To finish registration, please click the 
+    link below to verify your account.
+
+    https://email-phonenumber-validate.herokuapp.com/emailvalidate/${user._id}`// plain text body
+  
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if(error){
+      res.status(500).send(error.message);
+    } else {
+      console.log("Email Sent");
+      res.status(200).jsonp(req.body);
+    }
+  });
+}
 
 /**
  * Gets all users
