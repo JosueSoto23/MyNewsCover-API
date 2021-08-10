@@ -13,6 +13,34 @@ const db = mongoose.connect("mongodb://127.0.0.1:27017/tasks-api");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
+//const nodemailer = require('nodemailer');
+
+/*app.post("/send/email", (req, res) => {
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: "geberthalfaro85@gmail.com", // generated ethereal user
+      pass: "fpfbgqtqdxbtggod", // generated ethereal password
+    },
+  })
+  var mailOptions = {
+    from: '"Remitente', // sender address
+    to: "shadowshadow586@gmail.com", // list of receivers
+    subject: "Hello ✔", // Subject line
+    text: "Hello world?" // plain text body
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if(error){
+      res.status(500).send(error.message);
+    } else {
+      console.log("Email Enviado");
+      res.status(200).jsonp(req.body);
+    }
+  });
+});*/
+
 /**
  * User controller
  */
