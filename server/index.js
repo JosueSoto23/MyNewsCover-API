@@ -8,7 +8,7 @@ const app = express();
  * Database connection
  */
 const mongoose = require("mongoose");
-const db = mongoose.connect("mongodb://127.0.0.1:27017/tasks-api");
+const db = mongoose.connect("mongodb://127.0.0.1:27017/Ultimate-project");
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
@@ -40,6 +40,67 @@ app.use(bodyParser.json());
     }
   });
 });*/
+/*
+app.post("/api/session", function (req, res, next) {
+  if (req.body.username && req.body.password &&
+      req.body.username === 'admin' && req.body.password === 'password') {
+      const session = saveSession(req.body.username);
+      session.then(function (session
+      ) {
+          if (!session) {
+              res.status(422);
+              res.json({
+                  error: 'There was an error saving the session'
+              });
+          }
+          res.status(201).json({
+              session
+          });
+      })
+  } else {
+      res.status(422);
+      res.json({
+          error: 'Invalid username or password'
+      });
+  }
+});
+
+app.use(function (req, res, next) {
+  if (req.headers["authorization"]) {
+      const token = req.headers['authorization'].split(' ')[1];
+      try {
+          const session = getSession(token);
+          session.then(function (session) {
+              if (session) {
+                  next();
+                  return;
+              } else {
+                  res.status(401);
+                  res.send({
+                      error: "Unauthorized"
+                  });
+              }
+          })
+              .catch(function (err) {
+                  console.log('there was an error getting the session', err);
+                  res.status(422);
+                  res.send({
+                      error: "There was an error: " + err.message
+                  });
+              })
+      } catch (e) {
+          res.status(422);
+          res.send({
+              error: "There was an error: " + e.message
+          });
+      }
+  } else {
+      res.status(401);
+      res.send({
+          error: "Unauthorized"
+      });
+  }
+});*/
 
 /**
  * User controller
@@ -48,7 +109,8 @@ const {
   userPatch,
   userPost,
   userGet,
-  userDelete
+  userDelete,
+  sessionGet
 } = require("./controllers/registerController");
 
 /**
@@ -65,6 +127,7 @@ const {
  * News controller
  */
 const {
+  getNewssources,
   newsPost,
   newsGet,
   newsDelete
@@ -79,6 +142,10 @@ const {
   newsSourceGet,
   newsSourceDelete
 } = require("./controllers/newssourcesController");
+
+const {
+  confirmPatch
+} = require("./controllers/confirmAcountController");
 
 /**
  * Cors
@@ -98,6 +165,11 @@ app.patch("/api/users", userPatch);
 app.put("/api/users", userPatch);
 app.delete("/api/users", userDelete);
 
+app.get("/api/sessions", sessionGet);
+
+app.patch("/api/confirmAcount", confirmPatch);
+app.put("/api/confirmAcount", confirmPatch);
+
 /**
  * Categories http methods
  */
@@ -110,6 +182,7 @@ app.delete("/api/categories", categoryDelete);
 /**
  * News http methods
  */
+app.get('/newss', getNewssources);
 app.get("/api/news", newsGet);
 app.post("/api/news", newsPost);
 app.delete("/api/news", newsDelete);

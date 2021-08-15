@@ -3,48 +3,49 @@
  */
 const News = require("../models/newsModel");
 
-/**
- * Creates a new
- *
- * @param {*} req Data required
- * @param {*} res Http status code
- */
-const newsPost = (req, res) => {
-  var news = new News();
+const newsSourceController = require('../Controllers/newssourcesController');
 
-  news.title = req.body.title;
-  news.short_description = req.body.short_description;
+const url = 'http://localhost:3000/api/newsSources';
+const fetch = require("node-fetch");
 
-  news.permanlink = req.body.permanlink;
+let Parser = require('rss-parser');
 
-  news.date = req.body.date;
-  news.news_source_id = req.body.news_source_id;
+var DomParser = require('dom-parser');
 
-  news.user_id = req.body.user_id;
-  news.category_id = req.body.category_id; 
 
-  if (news.title && news.short_description && news.permanlink && news.news_source_id) {
-    news.save(function (err) {
-      if (err) {
-        res.status(422);
-        console.log('error while saving the news', err)
-        res.json({
-          error: 'There was an error saving the news'
-        });
+
+const getNewssources = (req) => {
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      for (let item of data) {
+        readRSS(item)
       }
-      res.status(201);// CREATED
-      res.header({
-        'location': `http://localhost:3000/api/news/?id=${news.id}`
-      });
-      res.json(news);
     });
-  } else {
-    res.status(422);
-    console.log('error while saving the news')
-    res.json({
-      error: 'No valid data provided for news'
-    });
+}
+
+
+const readRSS = async (newsSource) => {
+  let parser = new Parser();
+  let feed = await parser.parseURL(newsSource.url);
+  feed.items.forEach(item => {
+    newsPost(newsSource, item)
+  });
+}
+
+const newsPost = async(newsSource, item) => {
+  var data = {
+      "title": item.title,
+      "short_description": item.content,
+      "permanlink": item.link,
+      "date": item.pubDate,
+      "news_source_id": newsSource._id,
+      "user_id": newsSource.userID,
+      "category_id": newsSource.categoryID
   }
+  var news = new News(data);
+  await news.save();
+
 };
 
 /**
@@ -54,7 +55,7 @@ const newsPost = (req, res) => {
  * @param {*} res Http status code
  */
 const newsGet = (req, res) => {
-  
+
   if (req.query && req.query.id) {
     News.findById(req.query.id, function (err, news) {
       if (err) {
@@ -84,7 +85,7 @@ const newsGet = (req, res) => {
  * @param {*} res Http status code
  */
 const newsDelete = (req, res) => {
-  
+
   if (req.query && req.query.id) {
     News.findById(req.query.id, function (err, news) {
       if (err) {
@@ -92,11 +93,11 @@ const newsDelete = (req, res) => {
         console.log('error while queryting the news', err)
         res.json({ error: "news doesnt exist" })
       }
-      
-      if(news) {
-        news.remove(function(err){
-          if(err) {
-            res.status(500).json({message: "There was an error deleting the news"});
+
+      if (news) {
+        news.remove(function (err) {
+          if (err) {
+            res.status(500).json({ message: "There was an error deleting the news" });
           }
           res.status(204).json({});
         })
@@ -115,6 +116,8 @@ const newsDelete = (req, res) => {
  * Exports
  */
 module.exports = {
+  readRSS, 
+  getNewssources,
   newsGet,
   newsPost,
   newsDelete

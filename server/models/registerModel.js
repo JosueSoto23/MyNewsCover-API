@@ -20,7 +20,8 @@ const user = new Schema({
   city: { type: String },
   postalCode: { type: String },
   phoneNumber: { type: String },
-  role: { type: String }
+  role: { type: String },
+  enable: { type: Boolean }
 });
 
 /**

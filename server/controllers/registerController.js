@@ -2,6 +2,10 @@
  * Model connector
  */
 const User = require("../models/registerModel");
+const express = require('express');
+const app = express();
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 
 /**
  * Creates an user
@@ -27,6 +31,7 @@ const userPost = (req, res) => {
   user.postalCode = req.body.postalCode;
   user.phoneNumber = req.body.phoneNumber;
   user.role = req.body.role;
+  user.enable = req.body.enable
 
   if (user.firstName && user.lastName && user.email && user.password && user.role) {
     user.save(function (err) {
@@ -53,7 +58,12 @@ const userPost = (req, res) => {
   }
 };
 
+function textEmail (){
+  console.log("Funcionando");
+}
+
 const sendMail = async(user) => {
+
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -63,6 +73,11 @@ const sendMail = async(user) => {
       pass: "fpfbgqtqdxbtggod", // generated ethereal password
     },
   })
+
+  //var token = jwt.sign({ email: user.email }, process.env.TOKEN_SECRET);
+
+  //const urlConfirm = `${process.env.APIGATEWAY_URL}/account/confirm/${token}`;
+
   var mailOptions = {
     from: '"Remitente', // sender address
     to: user.email, // list of receivers
@@ -71,8 +86,17 @@ const sendMail = async(user) => {
     
     Thanks for joining My News Cover. To finish registration, please click the 
     link below to verify your account.
+    http://localhost:3000/api/sessions?id=${user.id}&enable=true`// plain text body
 
-    https://email-phonenumber-validate.herokuapp.com/emailvalidate/${user._id}`// plain text body
+    //html: `<p>Click <a href="http://localhost:3000/api/sessions?id=${user.id}">here</a> to reset your password</p>    `
+
+    //html: `Hey ${user.firstName} ${user.lastName}!
+    
+    //Thanks for joining My News Cover. To finish registration, please click the 
+    //link below to verify your account.
+
+   
+    //http://localhost:3000/api/users'${user._id}` // html body
   
   };
   transporter.sendMail(mailOptions, (error, info) => {
@@ -84,6 +108,91 @@ const sendMail = async(user) => {
     }
   });
 }
+
+const sessionGet = (req, res) => {
+  console.log("working")
+  if (req.query && req.query.id) {
+    User.findById(req.query.id, function (err, user) {
+      if (err) {
+        res.status(404);
+        console.log('error while queryting the user', err)
+        res.json({ error: "User doesnt exist" })
+      }
+
+      // Updates the task object (patch)
+    
+      user.enable = true;
+      //user.email = "dasd@gmail.com"
+      //user.role = "admin";
+      // Updates the task object (put)
+      // task.title = req.body.title
+      // task.detail = req.body.detail
+
+      user.save(function (err) {
+        if (err) {
+          res.status(422);
+          console.log('error while saving the user', err)
+          res.json({
+            error: 'There was an error saving the user'
+          });
+        }
+        res.status(200); // OK
+        res.json(user);
+      });
+    });
+  } else {
+    res.status(404);
+    res.json({ error: "User doesnt exist" })
+  }
+} 
+/*
+app.post("/signin", async (req, res) => {
+  const { email, password } = req.body;
+
+  /* ----------------- busca a un usuario por medio del email ----------------- */
+  /*const user = await User.findOne({ email: email });
+
+  if (!user) {
+    return res.json({ message: "the email doesnt exist" });
+  }
+  /* -------- compara las claves del usuario encontrado con el recibido ------- */
+  /*const passwordValidate = await user.comparePassword(password);
+
+  if (!passwordValidate) {
+    return res.send({ message: "Incorrect password" });
+  }
+  /* ---------------------------- se crea el token ---------------------------- */
+  /*const token = jwt.sign({ id: user._id }, process.env.TOKENACCESS, {
+    expiresIn: 60 * 60 * 24,
+  });
+
+  /* ------------------ se envia datos del usuario y el token ----------------- */
+
+  /*user.password = "...";
+
+  res.send({ auth: true, token, user });
+});
+
+
+
+/*function confirmAccount(token) {
+  var email = null;
+  try {
+    const payload = jwt.verify(token, process.env.TOKEN_SECRET);
+    email = payload.email;
+  } catch(err) {
+    throw new Error('invalid token');
+  }
+
+  return this.findOne({ email })
+    .then(user => {
+      if (!user) throw new Error('user not found');
+      if (user.enable) throw new Error('user already verified');
+
+      user.enable = true;
+      return user.save();
+    });
+}*/
 
 /**
  * Gets all users
@@ -166,17 +275,8 @@ const userPatch = (req, res) => {
       }
 
       // Updates the task object (patch)
-      user.firstName = req.body.name ? req.body.firstName : task.firstName;
-      user.lastName = req.body.lastName ? req.body.lastName : task.lastName;
-
-      user.email = req.body.email ? req.body.email : task.email;
-      user.password = req.body.password ? req.body.password : task.password;
-
-      user.country = req.body.country ? req.body.country : task.country;
-      user.city = req.body.city ? req.body.city : task.city;
-
-      user.postalCode = req.body.postalCode ? req.body.postalCode : task.postalCode;
-      user.phoneNumber = req.body.phoneNumber ? req.body.phoneNumber : task.phoneNumber;
+    
+      user.enable = req.body.enable ? req.body.enable : user.enable;
       // Updates the task object (put)
       // task.title = req.body.title
       // task.detail = req.body.detail
@@ -206,5 +306,6 @@ module.exports = {
   userGet,
   userPost,
   userPatch,
-  userDelete
+  userDelete,
+  sessionGet
 }
