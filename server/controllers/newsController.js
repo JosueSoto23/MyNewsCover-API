@@ -2,6 +2,7 @@
  * Model connector
  */
 const News = require("../models/newsModel");
+const Tags = require("../models/tagsModel");
 
 const newsSourceController = require('../Controllers/newssourcesController');
 
@@ -11,8 +12,6 @@ const fetch = require("node-fetch");
 let Parser = require('rss-parser');
 
 var DomParser = require('dom-parser');
-
-
 
 const getNewssources = (req) => {
   return fetch(url)
@@ -30,8 +29,19 @@ const readRSS = async (newsSource) => {
   let feed = await parser.parseURL(newsSource.url);
   feed.items.forEach(item => {
     newsPost(newsSource, item)
+    tagsPost(newsSource, item)
   });
 }
+
+const tagsPost = async(newsSource, item) => {
+  var data = {
+      "name": item.categories[0],
+      "user_id": newsSource.userID
+  }
+  var tags = new Tags(data);
+  await tags.save();
+
+};
 
 const newsPost = async(newsSource, item) => {
   var data = {

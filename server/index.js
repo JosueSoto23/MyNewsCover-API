@@ -147,6 +147,13 @@ const {
   confirmPatch
 } = require("./controllers/confirmAcountController");
 
+const {
+  tagsPatch,
+  tagsPost,
+  tagsGet,
+  tagsDelete
+} = require("./controllers/tagsController");
+
 /**
  * Cors
  */
@@ -195,6 +202,12 @@ app.post("/api/newsSources", newsSourcePost);
 app.patch("/api/newsSources", newsSourcePatch);
 app.put("/api/newsSources", newsSourcePatch);
 app.delete("/api/newsSources", newsSourceDelete);
+
+app.get("/api/tags", tagsGet);
+app.post("/api/tags", tagsPost);
+app.patch("/api/tags", tagsPatch);
+app.put("/api/tags", tagsPatch);
+app.delete("/api/tags", tagsDelete);
 
 /**
  * Host
