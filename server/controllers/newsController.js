@@ -29,7 +29,9 @@ const readRSS = async (newsSource) => {
   let feed = await parser.parseURL(newsSource.url);
   feed.items.forEach(item => {
     newsPost(newsSource, item)
-    tagsPost(newsSource, item)
+    if(item.categories){
+      tagsPost(newsSource, item)
+    }
   });
 }
 
