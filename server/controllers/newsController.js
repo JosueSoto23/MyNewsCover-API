@@ -25,35 +25,45 @@ const getNewssources = (req) => {
 
 
 const readRSS = async (newsSource) => {
+  let saved = [];
   let parser = new Parser();
   let feed = await parser.parseURL(newsSource.url);
   feed.items.forEach(item => {
     newsPost(newsSource, item)
-    if(item.categories){
-      tagsPost(newsSource, item)
+    if (item.categories) {
+      item.categories.forEach(tag => {
+        if (tag != "deportes") {
+          if (feed.items.length > 0) {
+            saved.push(tag);
+          }
+        }
+      });
     }
+  });
+  let unique = [...new Set(saved)];
+  unique.forEach(element => {
+    tagsPost(newsSource, element)
   });
 }
 
-const tagsPost = async(newsSource, item) => {
+const tagsPost = async (newsSource, tag) => {
   var data = {
-      "name": item.categories[0],
-      "user_id": newsSource.userID
+    "name": tag,
+    "user_id": newsSource.userID
   }
   var tags = new Tags(data);
   await tags.save();
-
 };
 
-const newsPost = async(newsSource, item) => {
+const newsPost = async (newsSource, item) => {
   var data = {
-      "title": item.title,
-      "short_description": item.content,
-      "permanlink": item.link,
-      "date": item.pubDate,
-      "news_source_id": newsSource._id,
-      "user_id": newsSource.userID,
-      "category_id": newsSource.categoryID
+    "title": item.title,
+    "short_description": item.content,
+    "permanlink": item.link,
+    "date": item.pubDate,
+    "news_source_id": newsSource._id,
+    "user_id": newsSource.userID,
+    "category_id": newsSource.categoryID
   }
   var news = new News(data);
   await news.save();
@@ -128,7 +138,7 @@ const newsDelete = (req, res) => {
  * Exports
  */
 module.exports = {
-  readRSS, 
+  readRSS,
   getNewssources,
   newsGet,
   newsPost,

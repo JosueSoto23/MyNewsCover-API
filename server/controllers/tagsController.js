@@ -55,7 +55,7 @@
          res.json({ error: "User doesnt exist" })
        }
        res.json(tags);
-     }).sort({ _id: -1 }).limit(3);
+     }).sort({ _id: -1 }).limit(10);
    } else {
      // Gets all news tags
      Tags.find(function (err, tags) {
@@ -78,7 +78,7 @@
  const tagsDelete = (req, res) => {
    // If an specific task is required
    if (req.query && req.query.id) {
-     Tags.findById(req.query.id, function (err, tags) {
+     Tags.find({"user_id" : req.query.user_id}, function (err, tags) {
        if (err) {
          res.status(500);
          console.log('error while queryting the tags', err)
