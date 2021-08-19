@@ -56,6 +56,7 @@ const tagsPost = async (newsSource, tag) => {
 };
 
 const newsPost = async (newsSource, item) => {
+  console.log(item.categories)
   var data = {
     "title": item.title,
     "short_description": item.content,
@@ -63,7 +64,8 @@ const newsPost = async (newsSource, item) => {
     "date": item.pubDate,
     "news_source_id": newsSource._id,
     "user_id": newsSource.userID,
-    "category_id": newsSource.categoryID
+    "category_id": newsSource.categoryID,
+    "tags": item.categories
   }
   var news = new News(data);
   await news.save();
