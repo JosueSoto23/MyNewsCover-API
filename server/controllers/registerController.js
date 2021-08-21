@@ -71,10 +71,6 @@ const sendMail = async(user) => {
     },
   })
 
-  //var token = jwt.sign({ email: user.email }, process.env.TOKEN_SECRET);
-
-  //const urlConfirm = `${process.env.APIGATEWAY_URL}/account/confirm/${token}`;
-
   var mailOptions = {
     from: '"Remitente', // sender address
     to: user.email, // list of receivers
@@ -83,17 +79,7 @@ const sendMail = async(user) => {
     
     Thanks for joining My News Cover. To finish registration, please click the 
     link below to verify your account.
-    http://localhost:3000/api/sessions?id=${user.id}&enable=true`// plain text body
-
-    //html: `<p>Click <a href="http://localhost:3000/api/sessions?id=${user.id}">here</a> to reset your password</p>    `
-
-    //html: `Hey ${user.firstName} ${user.lastName}!
-    
-    //Thanks for joining My News Cover. To finish registration, please click the 
-    //link below to verify your account.
-
-   
-    //http://localhost:3000/api/users'${user._id}` // html body
+    http://localhost:3000/api/sessions?id=${user.id}&enable=true`
   
   };
   transporter.sendMail(mailOptions, (error, info) => {
@@ -172,57 +158,60 @@ const userAuth = async (req, res) =>{
     });
 }
 
+const sendMailLogin = (req, res) => {
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: "geberthalfaro85@gmail.com", // generated ethereal user
+      pass: "fpfbgqtqdxbtggod", // generated ethereal password
+    },
+  })
 
+  var mailOptions = {
+    from: '"Remitente', // sender address
+    to: req.body.email, // list of receivers
+    subject: "[My News Cover] Please confirm your email address", // Subject line
+    text:  `
+    This link is for you to log in without having to enter your password.
 
-
-/*
-app.post("/signin", async (req, res) => {
-  const { email, password } = req.body;
-
-  /* ----------------- busca a un usuario por medio del email ----------------- */
-  /*const user = await User.findOne({ email: email });
-
-  if (!user) {
-    return res.json({ message: "the email doesnt exist" });
-  }
-  /* -------- compara las claves del usuario encontrado con el recibido ------- */
-  /*const passwordValidate = await user.comparePassword(password);
-
-  if (!passwordValidate) {
-    return res.send({ message: "Incorrect password" });
-  }
-  /* ---------------------------- se crea el token ---------------------------- */
-  /*const token = jwt.sign({ id: user._id }, process.env.TOKENACCESS, {
-    expiresIn: 60 * 60 * 24,
+    https://localhost/apps/MyNewsCover-App/client/fastLogin.html?email=${req.body.email}`
+  
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if(error){
+      res.status(500).send(error.message);
+    } else {
+      console.log("Email Sent");
+      res.status(200).jsonp(req.body);
+    }
   });
+}
 
-  /* ------------------ se envia datos del usuario y el token ----------------- */
-
-  /*user.password = "...";
-
-  res.send({ auth: true, token, user });
-});
-
-
-
-/*function confirmAccount(token) {
-  var email = null;
-  try {
-    const payload = jwt.verify(token, process.env.TOKEN_SECRET);
-    email = payload.email;
-  } catch(err) {
-    throw new Error('invalid token');
-  }
-
-  return this.findOne({ email })
-    .then(user => {
-      if (!user) throw new Error('user not found');
-      if (user.enable) throw new Error('user already verified');
-
-      user.enable = true;
-      return user.save();
+const userGetbyEmail = (req, res) => {
+  // If a specific user is required
+  if (req.query && req.query.email) {
+    User.find({ "email": req.query.email}, function (err, user) {
+      if (err) {
+        res.status(404);
+        console.log('error while queryting the user', err)
+        res.json({ error: "User doesnt exist" })
+      }
+      res.json(user);
     });
-}*/
+  } else {
+    //Gets all users
+    User.findById(req.query.id, function (err, user) {
+      if (err) {
+        res.status(422);
+        res.json({ "error": err });
+      }
+      res.json(user);
+    });
+
+  }
+};
 
 /**
  * Gets all users
@@ -338,5 +327,7 @@ module.exports = {
   userPatch,
   userDelete,
   sessionGet,
-  userAuth
+  userAuth,
+  sendMailLogin,
+  userGetbyEmail
 }

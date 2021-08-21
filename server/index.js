@@ -68,7 +68,9 @@ const {
   userGet,
   userDelete,
   sessionGet,
-  userAuth
+  userAuth,
+  sendMailLogin,
+  userGetbyEmail
 } = require("./controllers/registerController");
 
 /**
@@ -136,6 +138,9 @@ app.patch("/api/users", userPatch);
 app.put("/api/users", userPatch);
 app.delete("/api/users", userDelete);
 app.post("/api/userAuth", userAuth);
+app.post("/api/sendMailLogin", sendMailLogin);
+app.get("/api/userGetbyEmail", userGetbyEmail);
+
 
 app.get("/api/sessions", sessionGet);
 
