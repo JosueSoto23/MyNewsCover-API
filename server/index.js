@@ -9,98 +9,55 @@ const app = express();
  */
 const mongoose = require("mongoose");
 const db = mongoose.connect("mongodb://127.0.0.1:27017/Ultimate-project");
+const jwt = require("jsonwebtoken");
+
+const THE_SECRET_KEY = '123';
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
-//const nodemailer = require('nodemailer');
-
-/*app.post("/send/email", (req, res) => {
-  let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true, // true for 465, false for other ports
-    auth: {
-      user: "geberthalfaro85@gmail.com", // generated ethereal user
-      pass: "fpfbgqtqdxbtggod", // generated ethereal password
-    },
-  })
-  var mailOptions = {
-    from: '"Remitente', // sender address
-    to: "shadowshadow586@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?" // plain text body
-  };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if(error){
-      res.status(500).send(error.message);
-    } else {
-      console.log("Email Enviado");
-      res.status(200).jsonp(req.body);
-    }
-  });
-});*/
-/*
-app.post("/api/session", function (req, res, next) {
-  if (req.body.username && req.body.password &&
-      req.body.username === 'admin' && req.body.password === 'password') {
-      const session = saveSession(req.body.username);
-      session.then(function (session
-      ) {
-          if (!session) {
-              res.status(422);
-              res.json({
-                  error: 'There was an error saving the session'
-              });
-          }
-          res.status(201).json({
-              session
-          });
-      })
-  } else {
-      res.status(422);
-      res.json({
-          error: 'Invalid username or password'
-      });
+/*app.post("/api/login", (req , res) => {
+  const user = {
+      id: 1,
+      nombre : "Daniel",
+      email: "geberthalfaro85@gmail.com"
   }
+
+  jwt.sign({user}, 'secretkey', {expiresIn: '32s'}, (err, token) => {
+      res.json({
+          token
+      });
+  });
+
+});*/
+
+app.use("/api/posts", verifyToken, (req , res) => {
+  console.log("hola yo soy el token",req.token)
+  jwt.verify(req.token, THE_SECRET_KEY, (error, authData) => {
+      if(error){
+          res.sendStatus(403);
+      }else{
+          res.json({
+                  mensaje: "Post fue creado",
+                  authData
+              });
+      }
+  });
 });
 
-app.use(function (req, res, next) {
-  if (req.headers["authorization"]) {
-      const token = req.headers['authorization'].split(' ')[1];
-      try {
-          const session = getSession(token);
-          session.then(function (session) {
-              if (session) {
-                  next();
-                  return;
-              } else {
-                  res.status(401);
-                  res.send({
-                      error: "Unauthorized"
-                  });
-              }
-          })
-              .catch(function (err) {
-                  console.log('there was an error getting the session', err);
-                  res.status(422);
-                  res.send({
-                      error: "There was an error: " + err.message
-                  });
-              })
-      } catch (e) {
-          res.status(422);
-          res.send({
-              error: "There was an error: " + e.message
-          });
-      }
-  } else {
-      res.status(401);
-      res.send({
-          error: "Unauthorized"
-      });
-  }
-});*/
+// Authorization: Bearer <token>
+function verifyToken(req, res, next){
+   const bearerHeader =  req.headers['authorization'];
+
+   if(typeof bearerHeader !== 'undefined'){
+        const bearerToken = bearerHeader.split(" ")[1];
+        req.token  = bearerToken;
+        next();
+   }else{
+       res.sendStatus(403);
+   }
+}
+
 
 /**
  * User controller
@@ -110,7 +67,8 @@ const {
   userPost,
   userGet,
   userDelete,
-  sessionGet
+  sessionGet,
+  userAuth
 } = require("./controllers/registerController");
 
 /**
@@ -154,6 +112,12 @@ const {
   tagsDelete
 } = require("./controllers/tagsController");
 
+const {
+  
+} = require("./controllers/tagsController");
+
+
+
 /**
  * Cors
  */
@@ -171,6 +135,7 @@ app.post("/api/users", userPost);
 app.patch("/api/users", userPatch);
 app.put("/api/users", userPatch);
 app.delete("/api/users", userDelete);
+app.post("/api/userAuth", userAuth);
 
 app.get("/api/sessions", sessionGet);
 

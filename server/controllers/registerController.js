@@ -6,6 +6,7 @@ const express = require('express');
 const app = express();
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
+const THE_SECRET_KEY = '123';
 
 /**
  * Creates an user
@@ -57,10 +58,6 @@ const userPost = (req, res) => {
     });
   }
 };
-
-function textEmail (){
-  console.log("Funcionando");
-}
 
 const sendMail = async(user) => {
 
@@ -124,7 +121,7 @@ client.messages
 const sessionGet = (req, res) => {
   console.log("working")
   if (req.query && req.query.id) {
-    User.findById(req.query.id, function (err, user) {
+    User.find(req.query.id, function (err, user) {
       if (err) {
         res.status(404);
         console.log('error while queryting the user', err)
@@ -157,6 +154,27 @@ const sessionGet = (req, res) => {
     res.json({ error: "User doesnt exist" })
   }
 } 
+
+const userAuth = async (req, res) =>{
+  const { email, password } = req.body;
+
+  const user = await User.find({ "email": email, "password": password });
+
+  if (!user) {
+    return res.json({ message: "the email doesnt exist" });
+  }
+  console.log(user)
+  //const passwordValidate = await User.findOne({ password: password });
+  jwt.sign({user}, THE_SECRET_KEY, {expiresIn: 1440}, (err, token) => {
+    res.json({
+        token
+      });
+    });
+}
+
+
+
+
 /*
 app.post("/signin", async (req, res) => {
   const { email, password } = req.body;
@@ -214,8 +232,8 @@ app.post("/signin", async (req, res) => {
  */
 const userGet = (req, res) => {
   // If a specific user is required
-  if (req.query && req.query.id) {
-    User.findById(req.query.id, function (err, user) {
+  if (req.query && req.query.email && req.query.password) {
+    User.find({ "email": req.query.email, "password": req.query.password }, function (err, user) {
       if (err) {
         res.status(404);
         console.log('error while queryting the user', err)
@@ -225,7 +243,7 @@ const userGet = (req, res) => {
     });
   } else {
     //Gets all users
-    User.find(function (err, user) {
+    User.findById(req.query.id, function (err, user) {
       if (err) {
         res.status(422);
         res.json({ "error": err });
@@ -319,5 +337,6 @@ module.exports = {
   userPost,
   userPatch,
   userDelete,
-  sessionGet
+  sessionGet,
+  userAuth
 }
