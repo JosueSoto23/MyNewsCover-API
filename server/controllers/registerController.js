@@ -32,7 +32,7 @@ const userPost = (req, res) => {
   user.postalCode = req.body.postalCode;
   user.phoneNumber = req.body.phoneNumber;
   user.role = req.body.role;
-  user.enable = req.body.enable
+  user.enable = true
 
   if (user.firstName && user.lastName && user.email && user.password && user.role) {
     user.save(function (err) {
@@ -79,7 +79,7 @@ const sendMail = async(user) => {
     
     Thanks for joining My News Cover. To finish registration, please click the 
     link below to verify your account.
-    http://localhost:3000/api/sessions?id=${user.id}&enable=true`
+    https://localhost/apps/MyNewsCover-App/client/activateAccount.html?id=${user.id}`
   
   };
   transporter.sendMail(mailOptions, (error, info) => {
@@ -91,7 +91,7 @@ const sendMail = async(user) => {
     }
   });
 }
-
+//http://localhost:3000/api/sessions?id=${user.id}&enable=true
 /*const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
@@ -115,7 +115,7 @@ const sessionGet = (req, res) => {
       }
 
       // Updates the task object (patch)
-    
+      
       user.enable = true;
       //user.email = "dasd@gmail.com"
       //user.role = "admin";
@@ -172,7 +172,7 @@ const sendMailLogin = (req, res) => {
   var mailOptions = {
     from: '"Remitente', // sender address
     to: req.body.email, // list of receivers
-    subject: "[My News Cover] Please confirm your email address", // Subject line
+    subject: "[My News Cover] Login without password", // Subject line
     text:  `
     This link is for you to log in without having to enter your password.
 
