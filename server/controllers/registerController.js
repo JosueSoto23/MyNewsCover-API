@@ -32,7 +32,7 @@ const userPost = (req, res) => {
   user.postalCode = req.body.postalCode;
   user.phoneNumber = req.body.phoneNumber;
   user.role = req.body.role;
-  user.enable = true
+  user.enable = false
 
   if (user.firstName && user.lastName && user.email && user.password && user.role) {
     user.save(function (err) {
@@ -107,7 +107,7 @@ client.messages
 const sessionGet = (req, res) => {
   console.log("working")
   if (req.query && req.query.id) {
-    User.find(req.query.id, function (err, user) {
+    User.findById(req.query.id, function (err, user) {
       if (err) {
         res.status(404);
         console.log('error while queryting the user', err)
