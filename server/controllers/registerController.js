@@ -7,6 +7,10 @@ const app = express();
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const THE_SECRET_KEY = '123';
+//require("dotenv").config();
+const accountSid = "AC814d9dd5d2a02813b1a22b5a2fe5322f";
+const authToken = "837d244bde42861d49922b6090fcbf7e";
+const client = require("twilio")(accountSid, authToken);
 
 /**
  * Creates an user
@@ -59,7 +63,7 @@ const userPost = (req, res) => {
   }
 };
 
-const sendMail = async(user) => {
+const sendMail = async (user) => {
 
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -75,15 +79,15 @@ const sendMail = async(user) => {
     from: '"Remitente', // sender address
     to: user.email, // list of receivers
     subject: "[My News Cover] Please confirm your email address", // Subject line
-    text:  `Hey ${user.firstName} ${user.lastName}!
+    text: `Hey ${user.firstName} ${user.lastName}!
     
     Thanks for joining My News Cover. To finish registration, please click the 
     link below to verify your account.
     https://localhost/apps/MyNewsCover-App/client/activateAccount.html?id=${user.id}`
-  
+
   };
   transporter.sendMail(mailOptions, (error, info) => {
-    if(error){
+    if (error) {
       res.status(500).send(error.message);
     } else {
       console.log("Email Sent");
@@ -92,18 +96,7 @@ const sendMail = async(user) => {
   });
 }
 //http://localhost:3000/api/sessions?id=${user.id}&enable=true
-/*const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require('twilio')(accountSid, authToken);
 
-client.messages
-  .create({
-     body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
-     from: '+15017122661',
-     to: '+15558675310'
-   })
-  .then(message => console.log(message.sid));
-*/
 const sessionGet = (req, res) => {
   console.log("working")
   if (req.query && req.query.id) {
@@ -115,7 +108,7 @@ const sessionGet = (req, res) => {
       }
 
       // Updates the task object (patch)
-      
+
       user.enable = true;
       //user.email = "dasd@gmail.com"
       //user.role = "admin";
@@ -139,9 +132,9 @@ const sessionGet = (req, res) => {
     res.status(404);
     res.json({ error: "User doesnt exist" })
   }
-} 
+}
 
-const userAuth = async (req, res) =>{
+const userAuth = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.find({ "email": email, "password": password });
@@ -151,11 +144,11 @@ const userAuth = async (req, res) =>{
   }
   console.log(user)
   //const passwordValidate = await User.findOne({ password: password });
-  jwt.sign({user}, THE_SECRET_KEY, {expiresIn: 1440}, (err, token) => {
+  jwt.sign({ user }, THE_SECRET_KEY, { expiresIn: 1440 }, (err, token) => {
     res.json({
-        token
-      });
+      token
     });
+  });
 }
 
 const sendMailLogin = (req, res) => {
@@ -173,14 +166,14 @@ const sendMailLogin = (req, res) => {
     from: '"Remitente', // sender address
     to: req.body.email, // list of receivers
     subject: "[My News Cover] Login without password", // Subject line
-    text:  `
+    text: `
     This link is for you to log in without having to enter your password.
 
     https://localhost/apps/MyNewsCover-App/client/fastLogin.html?email=${req.body.email}`
-  
+
   };
   transporter.sendMail(mailOptions, (error, info) => {
-    if(error){
+    if (error) {
       res.status(500).send(error.message);
     } else {
       console.log("Email Sent");
@@ -192,7 +185,7 @@ const sendMailLogin = (req, res) => {
 const userGetbyEmail = (req, res) => {
   // If a specific user is required
   if (req.query && req.query.email) {
-    User.find({ "email": req.query.email}, function (err, user) {
+    User.find({ "email": req.query.email }, function (err, user) {
       if (err) {
         res.status(404);
         console.log('error while queryting the user', err)
@@ -242,7 +235,18 @@ const userGet = (req, res) => {
 
   }
 };
-
+const sendMessage = (req) => {
+  const codigo = Math.round(Math.random()*1000)+1 + Math.round(Math.random()*1000)+1;
+  console.log(codigo);
+  console.log(req.body);
+  client.messages.create({
+    //to: process.env.MY_PHONE_NUMBER,
+    to: `+506${req.body.phoneNumber}`,
+    from: "+14136422084",
+    body: "This is your login code"
+  })
+    .then(message => console.log(message.sid));
+};
 /**
  * Deletes one user
  *
@@ -294,7 +298,7 @@ const userPatch = (req, res) => {
       }
 
       // Updates the task object (patch)
-    
+
       user.enable = req.body.enable ? req.body.enable : user.enable;
       // Updates the task object (put)
       // task.title = req.body.title
@@ -329,5 +333,6 @@ module.exports = {
   sessionGet,
   userAuth,
   sendMailLogin,
-  userGetbyEmail
+  userGetbyEmail,
+  sendMessage
 }

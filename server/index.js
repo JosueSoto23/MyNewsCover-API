@@ -13,9 +13,20 @@ const jwt = require("jsonwebtoken");
 
 const THE_SECRET_KEY = '123';
 
+/*require("dotenv").config();
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.AUTH_TOKEN;
+const client = require("twilio")(accountSid, authToken);*/
+
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
+/*client.messages.create({
+    to: process.env.MY_PHONE_NUMBER,
+    from: "+14136422084",
+    body: "This is your login code"
+})
+.then(message => console.log(message.sid));
 /*app.post("/api/login", (req , res) => {
   const user = {
       id: 1,
@@ -70,7 +81,8 @@ const {
   sessionGet,
   userAuth,
   sendMailLogin,
-  userGetbyEmail
+  userGetbyEmail,
+  sendMessage
 } = require("./controllers/registerController");
 
 /**
@@ -140,7 +152,7 @@ app.delete("/api/users", userDelete);
 app.post("/api/userAuth", userAuth);
 app.post("/api/sendMailLogin", sendMailLogin);
 app.get("/api/userGetbyEmail", userGetbyEmail);
-
+app.post("/api/sendMessage", sendMessage);
 
 app.get("/api/sessions", sessionGet);
 
