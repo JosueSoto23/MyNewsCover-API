@@ -127,8 +127,11 @@ const {
 } = require("./controllers/tagsController");
 
 const {
-  
-} = require("./controllers/tagsController");
+  CodePatch,
+  CodePost,
+  CodeGet,
+  CodeDelete
+} = require("./controllers/codeController");
 
 
 
@@ -190,6 +193,12 @@ app.post("/api/tags", tagsPost);
 app.patch("/api/tags", tagsPatch);
 app.put("/api/tags", tagsPatch);
 app.delete("/api/tags", tagsDelete);
+
+app.get("/api/Code", CodeGet);
+app.post("/api/Code", CodePost);
+app.patch("/api/Code", CodePatch);
+app.put("/api/Code", CodePatch);
+app.delete("/api/Code", CodeDelete);
 
 /**
  * Host

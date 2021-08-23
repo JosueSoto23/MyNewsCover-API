@@ -2,6 +2,8 @@
  * Model connector
  */
 const User = require("../models/registerModel");
+const codeModels = require("../models/codeModel");
+
 const express = require('express');
 const app = express();
 const nodemailer = require('nodemailer');
@@ -9,8 +11,23 @@ const jwt = require('jsonwebtoken');
 const THE_SECRET_KEY = '123';
 //require("dotenv").config();
 const accountSid = "AC814d9dd5d2a02813b1a22b5a2fe5322f";
-const authToken = "837d244bde42861d49922b6090fcbf7e";
+const authToken = "71a3545755d348237436493b97358af2";
 const client = require("twilio")(accountSid, authToken);
+
+const url = 'http://localhost:3000/api/Code';
+const fetch = require("node-fetch");
+
+var DomParser = require('dom-parser');
+
+const getNewssources = (req) => {
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      for (let item of data) {
+        readRSS(item)
+      }
+    });
+}
 
 /**
  * Creates an user
@@ -235,15 +252,26 @@ const userGet = (req, res) => {
 
   }
 };
+
+const codePost = async (codigo, user_id) => {
+  var data = {
+    "code": codigo,
+    "user_id": user_id
+  }
+  var code = new codeModels(data);
+  await code.save();
+
+};
+
 const sendMessage = (req) => {
   const codigo = Math.round(Math.random()*1000)+1 + Math.round(Math.random()*1000)+1;
   console.log(codigo);
-  console.log(req.body);
+  codePost(codigo, req.body.user_id);
   client.messages.create({
     //to: process.env.MY_PHONE_NUMBER,
     to: `+506${req.body.phoneNumber}`,
     from: "+14136422084",
-    body: "This is your login code"
+    body: `This is your login code ${codigo}`
   })
     .then(message => console.log(message.sid));
 };
